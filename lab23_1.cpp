@@ -20,22 +20,61 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
-
+void importDataFromFile (string filename, vector<string> &names, vector<int> &scores, vector<char> &grades){
+    ifstream source(filename);
+    string line;
+    while(getline(source, line)){
+        char name[100];
+        int s1, s2, s3;
+        sscanf(line.c_str(), "%[^:]: %d %d %d", name, &s1, &s2, &s3);
+        int total = s1 + s2 + s3;
+        names.push_back(name);
+        scores.push_back(total);
+        grades.push_back(score2grade(total));
+    }
 }
 
-void getCommand(){
-
+void getCommand(string &command, string &key){
+   string input;
+    cout << "Please input your command:\n";
+    getline(cin, input);
+    
+    int space1 = input.find_first_of(" ");
+    if(space1 != -1){
+        command = input.substr(0, space1);
+        key = input.substr(space1 + 1);
+    }else{
+        command = input;
+        key = "";
+    }
 }
 
-void searchName(){
-
+void searchName(vector<string> &names, vector<int> &scores, vector<char> &grades, string key){
+bool found = false;
+    cout << "---------------------------------\n";
+    for(unsigned int i = 0; i < names.size(); i++){
+        if(toUpperStr(names[i]) == key){
+            cout << names[i] << "'s score = " << scores[i] << "\n";
+            cout << names[i] << "'s grade = " << grades[i] << "\n";
+            found = true;
+        }
+    }
+    if(!found) cout << "Cannot found.\n";
+    cout << "---------------------------------\n";
 }
 
-void searchGrade(){
-
+void searchGrade(vector<string> &names, vector<int> &scores, vector<char> &grades, string key){
+        bool found = false;
+    cout << "---------------------------------\n";
+    for(unsigned i = 0; i < names.size(); i++){
+        if(grades[i] == key[0]){ 
+            cout << names[i] << " (" << scores[i] << ")\n";
+            found = true;
+        }
+    }
+    if(!found) cout << "Cannot found.\n";
+    cout << "---------------------------------\n";
 }
-
 
 int main(){
     string filename = "name_score.txt";
